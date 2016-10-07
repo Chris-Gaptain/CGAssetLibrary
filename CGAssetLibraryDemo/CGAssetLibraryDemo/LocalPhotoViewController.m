@@ -1,21 +1,17 @@
 //
 //  LocalPhotoViewController.m
-//  UThing
+//  Chris Gaptain
 //
-//  Created by wolf on 15/11/26.
-//  Copyright (c) 2015年 UThing. All rights reserved.
+//  Created by Chris Gaptain on 16/11/26.
+//  Copyright (c) 2016年 Chris Gaptain. All rights reserved.
 //
-
-//获取当前屏幕的宽度
-#define kMainScreenWidth [UIScreen mainScreen].bounds.size.width
-//获取当前屏幕的高度
-#define kMainScreenHeight [UIScreen mainScreen].bounds.size.height
 
 #import "LocalPhotoViewController.h"
 #import "UTPhotoDetailViewController.h"
 #import "SelectImageCollectionCell.h"
 #import "AssetHelper.h"
 #import "UTImageModel.h"
+
 
 NSString * const pickerImageCellIndentifer = @"pickerImageCellIndentifer";
 
@@ -57,10 +53,9 @@ NSString * const pickerImageCellIndentifer = @"pickerImageCellIndentifer";
             return;
         }
         UTImageModel *model = [[UTImageModel alloc]init];
-//        model.thumbnail = [UIImage imageWithCGImage:result.thumbnail];
+        model.thumbnail = [UIImage imageWithCGImage:result.thumbnail];
         model.imageUrl = result.defaultRepresentation.url;
         model.isFromCamera = NO;
-//        model.fullImage =  [UIImage imageWithCGImage:result.defaultRepresentation.fullScreenImage];
         [self.dataSource addObject:model];
 
     }];
@@ -79,7 +74,7 @@ NSString * const pickerImageCellIndentifer = @"pickerImageCellIndentifer";
 // 底部view
 - (UIView *)bottomView {
     if (!_bottomView) {
-        _bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, kMainScreenHeight-88, kMainScreenWidth, 44)];
+        _bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, kMainScreenHeight-88+64-20, kMainScreenWidth, 44)];
         _bottomView.backgroundColor = [UIColor whiteColor];
         
         UIView *lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, kMainScreenWidth, 1)];
@@ -96,8 +91,6 @@ NSString * const pickerImageCellIndentifer = @"pickerImageCellIndentifer";
         _sureBtn.titleLabel.font = [UIFont systemFontOfSize:15.0];
         [_sureBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
         [_sureBtn addTarget:self action:@selector(confirmBtnAction:) forControlEvents:UIControlEventTouchUpInside];
-//        _sureBtn.backgroundColor = [UIColor redColor];
-        
         _sureBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -30);
     }
     return _sureBtn;
@@ -136,7 +129,7 @@ NSString * const pickerImageCellIndentifer = @"pickerImageCellIndentifer";
     cell.backgroundColor = [UIColor whiteColor];
     
     UTImageModel *model = self.dataSource[indexPath.row];
-//    cell.imageV.image = model.thumbnail;
+    cell.imageV.image = model.thumbnail;
     
     if (model.selectState) {
         
@@ -180,7 +173,6 @@ NSString * const pickerImageCellIndentifer = @"pickerImageCellIndentifer";
             [cell.selectBtn setImage:[UIImage imageNamed:@"feedback_normal_image.png"] forState:UIControlStateNormal];
             model.selectState = NO;
         }
-        NSLog(@"====%ld",self.selectArray.count);
         
         [self.sureBtn setTitle:[NSString stringWithFormat:@"(%ld/%ld)确认",self.selectArray.count,4-self.totalSelectCount] forState:UIControlStateNormal];
     };
@@ -202,10 +194,10 @@ NSString * const pickerImageCellIndentifer = @"pickerImageCellIndentifer";
         
         // 数组最多只能装有4张图片
         if (self.selectArray.count+self.totalSelectCount > 3) {
-//            SIAlertView *alertView = [[SIAlertView alloc]initWithTitle:nil andMessage:@"最多选择4张图片"];
-//            [alertView addButtonWithTitle:@"确定" type:SIAlertViewButtonTypeDefault handler:^(SIAlertView *alertView) {
-//            }];
-//            [alertView show];
+            SIAlertView *alertView = [[SIAlertView alloc]initWithTitle:nil andMessage:@"最多选择4张图片"];
+            [alertView addButtonWithTitle:@"确定" type:SIAlertViewButtonTypeDefault handler:^(SIAlertView *alertView) {
+            }];
+            [alertView show];
             return;
         }
         [self.selectArray addObject:model];
@@ -219,79 +211,21 @@ NSString * const pickerImageCellIndentifer = @"pickerImageCellIndentifer";
     [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
     
     [self.sureBtn setTitle:[NSString stringWithFormat:@"(%ld/%ld)确认",self.selectArray.count,4-self.totalSelectCount] forState:UIControlStateNormal];
-
-    
-    NSLog(@"=======%ld",self.selectArray.count);
 }
+
 // 底部视图上得确定按钮
 - (void)confirmBtnAction:(UIButton *)sender {
-    
-
-//    NSMutableArray *mutableArray = [[NSMutableArray alloc]initWithCapacity:10];
-    
-//    for (NSInteger i = 0; i < self.selectArray.count; i++) {
-//        
-//        UTImageModel *model = self.selectArray[i];
-//        
-//        [mutableArray addObject:model.thumbnail];
-//    }
     
     NSDictionary *dic = [[NSDictionary alloc]initWithObjectsAndKeys:self.selectArray,@"PhotoArray", nil];
     [[NSNotificationCenter defaultCenter]postNotificationName:@"GetSelectedPhotoNotification" object:nil userInfo:dic];
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
-// 读出手机相册中所有的图片
-//- (void)showPhoto:(ALAssetsGroup *)album {
-//
-//    if (album != nil) {
-//        
-//        if (self.currentAlbum == nil || [[self.currentAlbum valueForProperty:ALAssetsGroupPropertyName] isEqualToString:[album valueForProperty:ALAssetsGroupPropertyName]]) {
-//            
-//            self.currentAlbum = album;
-//            if (!self.dataSource) {
-//                self.dataSource = [[NSMutableArray alloc]init];
-//            } else {
-//                [self.dataSource removeAllObjects];
-//            }
-//            
-//            ALAssetsFilter *photoFilter = [ALAssetsFilter allPhotos];
-//            [self.currentAlbum setAssetsFilter:photoFilter];
-////            [self.currentAlbum enumerateAssetsUsingBlock:assetsEnumerationBlock];
-////            self.title = [self.currentAlbum valueForProperty:ALAssetsGroupPropertyName];
-//            
-//            [self.currentAlbum enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-//                
-//                if (result) {
-//                    
-//                    CGImageRef imageRef = [result thumbnail];
-////                    CGImageRef imageRef = [result defaultRepresentation].fullScreenImage;
-//                    UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
-//                    
-//                    UTImageModel *model = [[UTImageModel alloc]init];
-//                    model.thumbnail = thumbnail;
-//                    model.selectState = NO;
-//                    
-//                    [self.dataSource addObject:model];
-//                    
-////                    CGImageRef imageRef2 = [result defaultRepresentation].fullScreenImage;
-////                    UIImage *thumbnail2 = [UIImage imageWithCGImage:imageRef2];
-////                    [self.source addObject:thumbnail2];
-//                }
-//
-//            }];
-//            
-//            [self.collectionView reloadData];
-//            
-//            
-//        }
-//    }
-//}
-
 #pragma mark - initial
 - (void)initialSubViews {
     
     self.navigationItem.title = @"选择照片";
+    self.view.backgroundColor = [UIColor redColor];
     
     [self.view addSubview:self.collectionView];
     [self.view addSubview:self.bottomView];

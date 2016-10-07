@@ -1,9 +1,9 @@
 //
 //  UTImageModel.m
-//  UThing
+//  Chris Gaptain
 //
-//  Created by wolf on 15/11/26.
-//  Copyright (c) 2015年 UThing. All rights reserved.
+//  Created by Chris Gaptain on 16/11/26.
+//  Copyright (c) 2016年 Chris Gaptain. All rights reserved.
 //
 
 #import "UTImageModel.h"
@@ -21,19 +21,19 @@
     return self;
 }
 
-//- (void)originalImage:(void (^)(UIImage *))returnImage{
-//    ALAssetsLibrary *lib = [[ALAssetsLibrary alloc] init];
-//    [lib assetForURL:self.imageUrl resultBlock:^(ALAsset *asset) {
-//        ALAssetRepresentation *rep = asset.defaultRepresentation;
-//        CGImageRef imageRef = rep.fullResolutionImage;
-//        UIImage *image = [UIImage imageWithCGImage:imageRef scale:rep.scale orientation:(UIImageOrientation)rep.orientation];
-//        if (image) {
-//            returnImage(image);
-//        }
-//    } failureBlock:^(NSError *error) {
-//        
-//    }];
-//}
+- (void)originalImage:(void (^)(UIImage *))returnImage{
+    ALAssetsLibrary *lib = [[ALAssetsLibrary alloc] init];
+    [lib assetForURL:self.imageUrl resultBlock:^(ALAsset *asset) {
+        ALAssetRepresentation *rep = asset.defaultRepresentation;
+        CGImageRef imageRef = rep.fullResolutionImage;
+        UIImage *image = [UIImage imageWithCGImage:imageRef scale:rep.scale orientation:(UIImageOrientation)rep.orientation];
+        if (image) {
+            returnImage(image);
+        }
+    } failureBlock:^(NSError *error) {
+        
+    }];
+}
 
 
 @end

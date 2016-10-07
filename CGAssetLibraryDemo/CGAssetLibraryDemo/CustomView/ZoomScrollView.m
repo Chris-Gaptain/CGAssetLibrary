@@ -1,17 +1,12 @@
 //
 //  ZoomScrollView.m
-//  UThing
+//  Chris Gaptain
 //
-//  Created by wolf on 15/11/27.
-//  Copyright (c) 2015年 UThing. All rights reserved.
+//  Created by Chris Gaptain on 16/11/27.
+//  Copyright (c) 2016年 Chris Gaptain. All rights reserved.
 //
 
 #define kMaxZoomScale 2.5
-
-//获取当前屏幕的宽度
-#define kMainScreenWidth [UIScreen mainScreen].bounds.size.width
-//获取当前屏幕的高度
-#define kMainScreenHeight [UIScreen mainScreen].bounds.size.height
 
 #import "ZoomScrollView.h"
 

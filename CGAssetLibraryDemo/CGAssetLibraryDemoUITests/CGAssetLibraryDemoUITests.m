@@ -2,8 +2,8 @@
 //  CGAssetLibraryDemoUITests.m
 //  CGAssetLibraryDemoUITests
 //
-//  Created by apple on 16/9/18.
-//  Copyright © 2016年 wolf. All rights reserved.
+//  Created by apple on 16/10/7.
+//  Copyright © 2016年 Chris Gaptain. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>

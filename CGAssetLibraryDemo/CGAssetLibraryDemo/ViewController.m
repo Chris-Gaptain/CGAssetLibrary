@@ -2,15 +2,9 @@
 //  ViewController.m
 //  CGAssetLibraryDemo
 //
-//  Created by apple on 16/9/18.
-//  Copyright © 2016年 wolf. All rights reserved.
+//  Created by apple on 16/10/7.
+//  Copyright © 2016年 Chris Gaptain. All rights reserved.
 //
-
-
-//获取当前屏幕的宽度
-#define kMainScreenWidth [UIScreen mainScreen].bounds.size.width
-//获取当前屏幕的高度
-#define kMainScreenHeight [UIScreen mainScreen].bounds.size.height
 
 #import "ViewController.h"
 #import "CameraCollectionCell.h"
@@ -18,10 +12,12 @@
 #import "ImageCollectionCell.h"
 #import "UTCustomActionSheet.h"
 #import "PhotoAlbumListViewController.h"
+#import "UTImageDetailViewController.h"
+#import "UTImageModel.h"
 
-NSString * const imageViewCellIdentifier   = @"imageViewCellIdentifier";
-NSString * const cameraCellIndentifier   = @"clickBtnCellIndentifier";
-NSString * const noImageViewCellIndentifer = @"noImageViewCellIndentifer";
+NSString * const imageViewCellIdentifier   = @"ImageViewCellIdentifier";
+NSString * const cameraCellIndentifier   = @"ClickBtnCellIndentifier";
+NSString * const noImageViewCellIndentifer = @"NoImageViewCellIndentifer";
 
 @interface ViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UTActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
@@ -39,6 +35,14 @@ NSString * const noImageViewCellIndentifer = @"noImageViewCellIndentifer";
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     [self.view addSubview:self.collectionView];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getSelectedPhotoNotification:) name:@"GetSelectedPhotoNotification" object:nil];
+}
+
+- (void)getSelectedPhotoNotification:(NSNotification *)notification {
+    NSMutableArray *array = [notification.userInfo objectForKey:@"PhotoArray"];
+    [self.dataArray addObjectsFromArray:array];
+    [self.collectionView reloadData];
 }
 
 #pragma mark - Getter
@@ -85,36 +89,27 @@ NSString * const noImageViewCellIndentifer = @"noImageViewCellIndentifer";
     if (self.dataArray.count == 0) {
         if (indexPath.row == 0) {
             CameraCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cameraCellIndentifier forIndexPath:indexPath];
-            
             return cell;
         } else {
             BlankCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:noImageViewCellIndentifer forIndexPath:indexPath];
-            
-            
             return cell;
         }
     }
     
     if (self.dataArray.count == 4) {
         ImageCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:imageViewCellIdentifier forIndexPath:indexPath];
-//        cell.backgroundColor = [UIColor whiteColor];
         
-//        UTImageModel *model = self.dataArray[self.dataArray.count - indexPath.row - 1];
-//        cell.imageV.image = model.thumbnail;
-        
+        UTImageModel *model = self.dataArray[self.dataArray.count - indexPath.row - 1];
+        cell.imageV.image = model.thumbnail;
         return cell;
     }
-    
+
     if (self.dataArray.count > 0 && self.dataArray.count < 4) {
         if (indexPath.row < self.dataArray.count) {
-            
             ImageCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:imageViewCellIdentifier forIndexPath:indexPath];
-//            cell.backgroundColor = [UIColor whiteColor];
             
-            //            cell.imageV.image = self.dataArray[self.dataArray.count - indexPath.row - 1];
-//            UTImageModel *model = self.dataArray[self.dataArray.count - indexPath.row - 1];
-//            cell.imageV.image = model.thumbnail;
-            
+            UTImageModel *model = self.dataArray[self.dataArray.count - indexPath.row - 1];
+            cell.imageV.image = model.thumbnail;
             return cell;
         }
         
@@ -125,11 +120,9 @@ NSString * const noImageViewCellIndentifer = @"noImageViewCellIndentifer";
         } else {
             BlankCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:noImageViewCellIndentifer forIndexPath:indexPath];
             
-            
             return cell;
         }
     }
-    
     return nil;
 }
 
@@ -137,28 +130,39 @@ NSString * const noImageViewCellIndentifer = @"noImageViewCellIndentifer";
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     
     if (self.dataArray.count == 0) {
-        
         if (indexPath.row == 0) {
-            // 添加图片按钮
-            UTCustomActionSheet *sheetView = [UTCustomActionSheet sheetWithTitle:nil buttonTitles:@[@"拍照",@"从手机相册选择"] redButtonIndex:-1 delegate:self];
-            [sheetView show];
+            
+            [self showActionSheet];
         }
-        
     }
 
     if (self.dataArray.count > 0 && self.dataArray.count < 8) {
         if (indexPath.row == self.dataArray.count) {
             
-            
-            
+            [self showActionSheet];
         } else if (indexPath.row < self.dataArray.count) {
-            
              // 删除图片
+            [self didSelectCollectionViewCheckImageDetail:indexPath];
         } else {
             
         }
     }
     
+}
+
+- (void)showActionSheet {
+    // 添加图片按钮
+    UTCustomActionSheet *sheetView = [UTCustomActionSheet sheetWithTitle:nil buttonTitles:@[@"拍照",@"从手机相册选择"] redButtonIndex:-1 delegate:self];
+    [sheetView show];
+}
+
+- (void)didSelectCollectionViewCheckImageDetail:(NSIndexPath *)indexPath {
+    
+    UTImageDetailViewController *detail = [[UTImageDetailViewController alloc]init];
+    detail.index = indexPath.row;
+    detail.imageModel = self.dataArray[self.dataArray.count-indexPath.row-1];
+    
+    [self.navigationController pushViewController:detail animated:YES];
 }
 
 

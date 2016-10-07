@@ -1,9 +1,9 @@
 //
 //  SelectImageCollectionCell.h
-//  UThing
+//  Chris Gaptain
 //
-//  Created by wolf on 15/11/26.
-//  Copyright (c) 2015年 UThing. All rights reserved.
+//  Created by Chris Gaptain on 16/11/26.
+//  Copyright (c) 2016年 Chris Gaptain. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

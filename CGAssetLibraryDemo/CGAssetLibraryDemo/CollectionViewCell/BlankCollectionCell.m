@@ -1,9 +1,9 @@
 //
 //  BlankCollectionCell.m
-//  UThing
+//  Chris Gaptain
 //
-//  Created by wolf on 15/11/25.
-//  Copyright (c) 2015年 UThing. All rights reserved.
+//  Created by Chris Gaptain on 16/11/25.
+//  Copyright (c) 2016年 Chris Gaptain. All rights reserved.
 //
 
 #import "BlankCollectionCell.h"
@@ -13,7 +13,7 @@
 -(instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.contentView.backgroundColor = [UIColor clearColor];
+        self.contentView.backgroundColor = [UIColor purpleColor];
     }
     return self;
 }
