@@ -143,11 +143,8 @@ NSString * const noImageViewCellIndentifer = @"NoImageViewCellIndentifer";
         } else if (indexPath.row < self.dataArray.count) {
              // 删除图片
             [self didSelectCollectionViewCheckImageDetail:indexPath];
-        } else {
-            
         }
     }
-    //123 456 789
 }
 
 - (void)showActionSheet {
